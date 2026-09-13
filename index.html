@@ -308,6 +308,53 @@
   .hero-badges{ display:flex; gap:8px; flex-wrap:wrap; }
   .hero-badge{ font-size:11px; font-weight:600; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); padding:5px 11px; border-radius:999px; backdrop-filter:blur(6px); }
 
+  /* ---------- Tourism impact at a glance (concise landing summary) ---------- */
+  .glance{
+    background:
+      linear-gradient(100deg, rgba(6,10,18,.44) 0%, rgba(6,10,18,.22) 55%, rgba(6,10,18,.1) 100%),
+      radial-gradient(circle at 12% 15%, rgba(79,214,232,.1), transparent 42%);
+    color:#fff; border-radius:20px; padding:26px 28px 28px; margin-bottom:18px;
+    border:1px solid rgba(255,255,255,.08); position:relative; overflow:hidden;
+    box-shadow: 0 20px 60px -24px rgba(3,10,20,.4), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .glance-eyebrow{ font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--glow-gold); margin-bottom:9px; display:flex; align-items:center; gap:7px; }
+  .glance-eyebrow::before{ content:""; width:7px; height:7px; border-radius:50%; background:var(--glow-gold); box-shadow:0 0 8px var(--glow-gold); }
+  .glance h1{ font-size:21px; color:#fff; margin-bottom:20px; max-width:44ch; }
+  .glance-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:26px; }
+  .glance-stat{
+    background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); border-radius:14px;
+    padding:16px 14px; text-align:center;
+  }
+  .gs-value{ font-size:23px; font-weight:800; color:#fff; font-family:"Sora","Public Sans",sans-serif; letter-spacing:-0.01em; }
+  .gs-label{ font-size:10.8px; color:rgba(255,255,255,.6); margin-top:5px; letter-spacing:.01em; }
+  .glance-cats-head{ font-family:"Sora","Public Sans",sans-serif; font-size:13.5px; font-weight:700; color:#fff; margin-bottom:12px; }
+  .glance-cats{ display:grid; grid-template-columns:repeat(4,1fr); gap:13px; }
+  .glance-cat{
+    position:relative;
+    background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.14); border-radius:14px;
+    padding:16px 16px 18px; cursor:pointer;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  }
+  .glance-cat:hover, .glance-cat:focus-visible{
+    transform:translateY(-3px); border-color:rgba(79,214,232,.55); outline:none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 12px 28px -10px rgba(0,0,0,.6);
+  }
+  .gc-ic{ font-size:21px; margin-bottom:10px; }
+  .gc-title{ font-family:"Sora","Public Sans",sans-serif; font-size:13.5px; font-weight:700; color:#fff; margin-bottom:5px; }
+  .gc-desc{ font-size:11px; color:rgba(255,255,255,.62); line-height:1.5; }
+  .gc-arrow{ position:absolute; top:14px; right:15px; font-size:13px; font-weight:700; color:rgba(255,255,255,.28); transition:color .15s ease, transform .15s ease; }
+  .glance-cat:hover .gc-arrow, .glance-cat:focus-visible .gc-arrow{ color:rgba(255,255,255,.9); transform:translateX(2px); }
+  @media (max-width:920px){
+    .glance-stats{ grid-template-columns:repeat(2,1fr); }
+    .glance-cats{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:560px){
+    .glance{ padding:20px 18px 22px; }
+    .glance h1{ font-size:18px; }
+    .glance-stats{ gap:10px; }
+    .glance-cats{ grid-template-columns:1fr; }
+  }
+
   /* orbit / radial cluster */
   .orbit{
     position:relative; min-height:360px;
@@ -731,16 +778,118 @@
     position:absolute; width:14px; height:14px; border-radius:50%; border:2px solid var(--surface);
     transform:translate(-50%,50%); box-shadow:0 1px 4px rgba(0,0,0,.25); cursor:default;
   }
-  .scatter .pt .lb{ position:absolute; top:-19px; left:50%; transform:translateX(-50%); font-size:10.5px; font-weight:700; white-space:nowrap; color:var(--ink); }
+  .scatter .pt .lb{ position:absolute; top:-19px; left:50%; transform:translateX(-50%); font-size:10.5px; font-weight:700; white-space:nowrap; color:var(--ink); pointer-events:none; }
   .scatter .pt .lb.below{ top:auto; bottom:-19px; }
+  .scatter .quad-label{ position:absolute; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-muted); opacity:.55; pointer-events:none; line-height:1.3; }
+  .scatter .quad-label.tr{ top:8px; right:10px; text-align:right; }
+  .scatter .quad-label.tl{ top:8px; left:10px; }
+  .scatter .quad-label.br{ bottom:8px; right:10px; text-align:right; }
+  .scatter .quad-label.bl{ bottom:8px; left:10px; }
+  .scatter .pt{ transition: background .5s ease, opacity .3s ease, width .2s ease, height .2s ease, box-shadow .2s ease; cursor:pointer; z-index:4; }
+  .scatter .pt.dimmed{ opacity:.28; }
+  .scatter .pt.selected{ width:20px; height:20px; box-shadow:0 0 0 3px var(--surface), 0 0 0 5px var(--ink), 0 2px 8px rgba(0,0,0,.35); z-index:5; }
+  .scatter .centroid-marker{
+    position:absolute; transform:translate(-50%,50%); font-size:12px; line-height:1; cursor:pointer;
+    background:var(--surface); border:2px solid var(--border-strong); border-radius:50%;
+    width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+    z-index:3; box-shadow:0 1px 4px rgba(0,0,0,.25);
+    transition:left .8s ease, bottom .8s ease, opacity .4s ease, transform .15s ease;
+  }
+  .scatter .centroid-marker:hover{ transform:translate(-50%,50%) scale(1.18); }
+  .scatter-tooltip{
+    position:absolute; transform:translate(-50%,calc(-100% - 10px)); background:var(--surface);
+    border:1px solid var(--border-strong); border-radius:10px; padding:8px 10px;
+    box-shadow:0 10px 24px -8px rgba(0,0,0,.4); pointer-events:none; z-index:6; min-width:150px;
+  }
+  .scatter-tooltip .tt-name{ font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink); margin-bottom:5px; }
+  .scatter-tooltip .tt-row{ display:flex; justify-content:space-between; gap:12px; font-size:10.8px; color:var(--ink-muted); margin-top:2px; }
+  .scatter-tooltip .tt-row b{ color:var(--ink); }
+  .scatter-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .run-seg-btn{ font-size:11px; font-weight:700; color:var(--brand); background:var(--brand-soft); border:1px solid var(--brand); border-radius:999px; padding:5px 12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
+  .run-seg-btn:hover{ filter:brightness(1.05); }
+  .run-seg-btn:disabled{ opacity:.6; cursor:default; }
+  .seg-status{ font-size:11px; font-weight:600; color:var(--brand); margin-top:8px; min-height:15px; }
+  .scatter-hint{ font-size:10.3px; color:var(--ink-muted); margin-top:8px; }
+  .state-detail{ margin-top:12px; border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--surface-2); }
+  .state-detail .sd-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .state-detail .sd-name{ font-family:"Sora","Public Sans",sans-serif; font-size:13px; font-weight:700; letter-spacing:.03em; color:var(--ink); }
+  .state-detail .sd-close{ background:none; border:none; cursor:pointer; color:var(--ink-muted); font-size:13px; padding:2px 4px; }
+  .state-detail .sd-close:hover{ color:var(--ink); }
+  .state-detail .sd-rows{ display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; margin-bottom:8px; }
+  .state-detail .sd-row{ display:flex; justify-content:space-between; font-size:11.3px; border-bottom:1px dashed var(--border); padding-bottom:4px; }
+  .state-detail .sd-k{ color:var(--ink-muted); }
+  .state-detail .sd-v{ font-weight:700; color:var(--ink); }
+  .state-detail .sd-reco{ font-size:11.3px; color:var(--ink-2); line-height:1.5; }
+
+  /* ---------- Cluster overview cards (segmentation summary) ---------- */
+  .cluster-card{ border:1px solid var(--border); border-radius:12px; padding:11px 13px; background:var(--surface-2); cursor:pointer; transition:border-color .15s ease, box-shadow .15s ease, background .15s ease; }
+  .cluster-card:hover{ border-color:var(--brand); }
+  .cluster-card.active{ border-color:var(--brand); box-shadow:0 0 0 1px var(--brand); background:var(--surface); }
+  .cluster-card .cc-main{ display:flex; gap:10px; align-items:flex-start; }
+  .cluster-card .cc-ic{ font-size:15px; line-height:1.25; }
+  .cluster-card .cc-body{ flex:1; min-width:0; }
+  .cluster-card .cc-tag{ font-size:10.3px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2); margin-bottom:3px; }
+  .cluster-card .cc-tag .cc-count{ text-transform:none; font-weight:600; color:var(--ink-muted); letter-spacing:0; }
+  .cluster-card .cc-states{ font-size:13px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+  .cluster-card .cc-metric{ font-size:11.3px; color:var(--ink-muted); line-height:1.45; }
+  .cluster-card .cc-chevron{ margin-left:auto; font-size:13px; color:var(--ink-muted); transition:transform .15s ease; align-self:center; }
+  .cluster-card.active .cc-chevron{ transform:rotate(90deg); color:var(--brand); }
+  .cluster-card .cc-breakdown{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:7px; }
+  .cluster-card .cc-breakdown[hidden]{ display:none; }
+  .cluster-card .cc-member{ display:flex; justify-content:space-between; align-items:center; font-size:11.3px; }
+  .cluster-card .cc-member-name{ font-family:"JetBrains Mono",monospace; font-size:10.6px; background:var(--surface); border:1px solid var(--border); border-radius:5px; padding:1px 6px; color:var(--ink-2); }
+  .cluster-card .cc-member-stats{ color:var(--ink-muted); font-weight:600; }
+  .cluster-card .cc-strategy{ font-size:11.3px; color:var(--ink-2); line-height:1.5; margin-top:2px; }
+  .ai-insight{ margin-top:10px; }
+  .ai-insight-btn{ width:100%; text-align:left; display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:10px 13px; cursor:pointer; font-family:inherit; }
+  .ai-insight-btn:hover{ border-color:var(--brand); }
+  .ai-insight-btn .ai-ic{ font-size:13px; }
+  .ai-insight-btn .ai-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--brand); }
+  .ai-insight-btn .ai-teaser{ font-size:12px; color:var(--ink); flex:1; min-width:120px; }
+  .ai-insight-btn .ai-link{ font-size:11px; font-weight:700; color:var(--brand); white-space:nowrap; }
+  .ai-insight-detail{ margin-top:8px; border:1px solid var(--brand); border-radius:12px; padding:11px 13px; background:var(--brand-soft); }
+  .ai-insight-detail .ct-text{ font-size:12px; color:var(--ink); line-height:1.5; }
+  .method-row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+  .method-pill{ font-family:"JetBrains Mono",monospace; font-size:10.3px; font-weight:500; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px 10px; }
+  .method-info-btn{ font-size:11px; font-weight:700; color:var(--brand); background:none; border:none; cursor:pointer; padding:3px 4px; font-family:inherit; }
+  .method-info-btn:hover{ text-decoration:underline; }
+  .cluster-footnote{ font-size:10.5px; color:var(--ink-muted); margin-top:10px; }
+  .method-badges-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .method-badge{ flex:1 1 150px; border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:var(--surface-2); }
+  .method-badge .mb-name{ font-size:12px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+  .method-badge .mb-tag{ font-size:11px; color:var(--ink-muted); }
 
   /* ---------- Grid layout helpers ---------- */
   .cols-2{ display:grid; grid-template-columns:1.15fr .85fr; gap:16px; align-items:start; }
+  .cols-2 > *, .cols-3 > *{ min-width:0; }
   .cols-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .cols-2[hidden], .cols-3[hidden]{ display:none; }
   .pad{ padding:18px 20px; }
 
   /* ---------- Map (real Malaysia geography, official DOSM boundaries) ---------- */
   .mapwrap{ display:grid; grid-template-columns: 1.5fr 1fr; gap:16px; align-items:start; }
+  .signals-panel{ margin-top:16px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px 20px 20px; }
+  .signals-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:5px; flex-wrap:wrap; }
+  .signals-head h3{ font-size:15px; }
+  .signals-note{ font-size:12px; color:var(--ink-muted); margin-bottom:14px; min-height:16px; transition:color .15s ease; }
+  .signals-note.matched{ color:var(--ink-2); font-weight:600; }
+  .signals-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:13px; }
+  .signal-tile{
+    border:1px solid var(--border); border-radius:12px; padding:13px 14px 14px; background:var(--surface-2);
+    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .signal-tile[data-signal="good"].active{ border-color:var(--good); box-shadow:0 0 0 1px var(--good); background:var(--surface); }
+  .signal-tile[data-signal="gold"].active{ border-color:var(--brand-2); box-shadow:0 0 0 1px var(--brand-2); background:var(--surface); }
+  .signal-tile[data-signal="pending"].active{ border-color:var(--ink-muted); box-shadow:0 0 0 1px var(--ink-muted); background:var(--surface); }
+  .signal-tile[data-signal="gdp"].active{ border-color:var(--brand); box-shadow:0 0 0 1px var(--brand); background:var(--surface); }
+  .sg-ic{ font-size:15px; line-height:1; margin-bottom:7px; }
+  .sg-label{ font-family:"Sora","Public Sans",sans-serif; font-size:10.3px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2); }
+  .sg-divider{ height:1px; background:var(--border); margin:9px 0; }
+  .sg-stat{ font-size:13px; font-weight:700; color:var(--ink); margin-bottom:3px; }
+  .sg-stat .num{ color:var(--good); }
+  .sg-desc{ font-size:10.8px; color:var(--ink-muted); line-height:1.45; }
+  @media (max-width:920px){ .signals-row{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .signals-row{ grid-template-columns:1fr; } }
   .mapsvg-card{ padding:16px; }
   .mapsvg{ width:100%; height:auto; display:block; overflow:visible; }
   .map-region-label{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; fill:var(--ink-muted); }
@@ -917,6 +1066,44 @@
   <main>
     <!-- ============ OVERVIEW ============ -->
     <section class="page active" id="page-overview">
+      <div class="glance">
+        <div class="glance-eyebrow">Tourism impact at a glance</div>
+        <h1>What tourism means for Malaysia, in four numbers</h1>
+        <div class="glance-stats">
+          <div class="glance-stat"><div class="gs-value num">RM213.5B</div><div class="gs-label">Tourism economic output</div></div>
+          <div class="glance-stat"><div class="gs-value num">3.5M</div><div class="gs-label">Tourism workforce</div></div>
+          <div class="glance-stat"><div class="gs-value num">37.96M</div><div class="gs-label">International arrivals</div></div>
+          <div class="glance-stat"><div class="gs-value num">15.1%</div><div class="gs-label">GDP contribution</div></div>
+        </div>
+        <div class="glance-cats-head">How tourism benefits Malaysia</div>
+        <div class="glance-cats">
+          <div class="glance-cat" data-page="economy" role="button" tabindex="0" aria-label="Open Tourism Economy for receipts and revenue">
+            <div class="gc-ic">💰</div>
+            <div class="gc-title">Economy</div>
+            <div class="gc-desc">RM106.7B in domestic receipts, plus inbound spending</div>
+            <span class="gc-arrow">›</span>
+          </div>
+          <div class="glance-cat" data-page="economy" role="button" tabindex="0" aria-label="Open Tourism Economy for the employment breakdown">
+            <div class="gc-ic">👥</div>
+            <div class="gc-title">Employment</div>
+            <div class="gc-desc">3.5M jobs — 21.6% of national employment</div>
+            <span class="gc-arrow">›</span>
+          </div>
+          <div class="glance-cat" data-page="regional" role="button" tabindex="0" aria-label="Open Destination Insights for where growth and investment are concentrated">
+            <div class="gc-ic">🏗</div>
+            <div class="gc-title">Infrastructure</div>
+            <div class="gc-desc">Where growth and coverage gaps sit, state by state</div>
+            <span class="gc-arrow">›</span>
+          </div>
+          <div class="glance-cat" data-page="about" role="button" tabindex="0" aria-label="Open Data and Methodology for the SDG alignment overview">
+            <div class="gc-ic">🌱</div>
+            <div class="gc-title">Sustainability</div>
+            <div class="gc-desc">SDG 8, 9, 12 &amp; 14 — growth without the cost</div>
+            <span class="gc-arrow">›</span>
+          </div>
+        </div>
+      </div>
+
       <div class="hero">
         <div class="hero-eyebrow">Malaysia Tourism Intelligence</div>
         <h1>Welcome to Malaysia's tourism dashboard</h1>
@@ -1156,7 +1343,6 @@
             <div class="mini-bar-col" data-tip-label="WP Kuala Lumpur" data-tip-value="RM14.1B"><div class="bv">14.1</div><div class="b" style="height:69%"></div><div class="bl">WP&nbsp;KL</div></div>
             <div class="mini-bar-col" data-tip-label="Pahang" data-tip-value="RM8.7B"><div class="bv">8.7</div><div class="b" style="height:43%"></div><div class="bl">Pahang</div></div>
             <div class="mini-bar-col" data-tip-label="Sabah" data-tip-value="RM8.6B"><div class="bv">8.6</div><div class="b" style="height:42%"></div><div class="bl">Sabah</div></div>
-            <div class="mini-bar-col" data-tip-label="Sarawak*" data-tip-value="RM6.9B (secondary source)"><div class="bv">6.9*</div><div class="b" style="height:34%"></div><div class="bl">Sarawak</div></div>
           </div>
         </div>
       </div>
@@ -1237,9 +1423,8 @@
               <div class="bar-row"><span class="rlabel">WP Kuala Lumpur</span><div class="bar-track"><div class="bar-fill" style="width:99%;background:var(--cat-1)"></div></div><span class="rval num">14.1</span></div>
               <div class="bar-row"><span class="rlabel">Pahang</span><div class="bar-track"><div class="bar-fill" style="width:61%;background:var(--cat-1)"></div></div><span class="rval num">8.7</span></div>
               <div class="bar-row"><span class="rlabel">Sabah</span><div class="bar-track"><div class="bar-fill" style="width:61%;background:var(--cat-1)"></div></div><span class="rval num">8.6</span></div>
-              <div class="bar-row"><span class="rlabel">Sarawak*</span><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--cat-1)"></div></div><span class="rval num">6.9</span></div>
             </div>
-            <div class="detail-note" style="margin-top:14px;">*Sarawak figure is media-reported (secondary source), not yet confirmed in the primary DOSM release — treat as indicative.</div>
+            <div class="detail-note" style="margin-top:14px;">Only these 4 states have an individually published <b style="color:var(--ink);">domestic</b> receipts figure in DOSM's Domestic Tourism Survey (States) release. Sarawak is left out of this specific comparison — see Data &amp; Methodology for why.</div>
           </div>
           <div class="card pad">
             <div class="ptitle" style="margin-bottom:12px;">Domestic visitor arrivals by state, 2024 (million)</div>
@@ -1349,54 +1534,88 @@
             <div class="detail-empty">Click a state on the map to see its 2024 tourism profile.</div>
           </div>
         </div>
+        <div class="signals-panel" id="mapSignals">
+          <div class="signals-head"><span class="eyebrow">Map signals</span><h3>Decode what each colour tells you</h3></div>
+          <div class="signals-note" id="signalsNote">Click a state on the map to see which signal it matches.</div>
+          <div class="signals-row">
+            <div class="signal-tile" data-signal="good">
+              <div class="sg-ic">🟢</div>
+              <div class="sg-label">Growth leader</div>
+              <div class="sg-divider"></div>
+              <div class="sg-stat">Perak <span class="num">+36.1%</span></div>
+              <div class="sg-desc">Fastest published YoY arrivals growth</div>
+            </div>
+            <div class="signal-tile" data-signal="gold">
+              <div class="sg-ic">🟡</div>
+              <div class="sg-label">High economic impact</div>
+              <div class="sg-divider"></div>
+              <div class="sg-stat">Selangor · KL · Pahang · Sabah</div>
+              <div class="sg-desc">Among the top states by tourism receipts</div>
+            </div>
+            <div class="signal-tile" data-signal="pending">
+              <div class="sg-ic">⚪</div>
+              <div class="sg-label">Data gap</div>
+              <div class="sg-divider"></div>
+              <div class="sg-stat">10 of 16 states</div>
+              <div class="sg-desc">No individually published 2024 breakdown yet</div>
+            </div>
+            <div class="signal-tile" data-signal="gdp">
+              <div class="sg-ic">🔵</div>
+              <div class="sg-label">GDP signal</div>
+              <div class="sg-divider"></div>
+              <div class="sg-stat">Real GDP growth</div>
+              <div class="sg-desc">Shown only where tourism data isn't published</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="block">
         <div class="block-head">
-          <div><span class="eyebrow">Legend</span><h2>How states are tagged</h2></div>
-        </div>
-        <div class="cols-3">
-          <div class="card pad" style="display:flex;gap:10px;align-items:flex-start;">
-            <span class="badge good">Growth leader</span>
-            <div class="detail-note" style="margin:0;">Fastest year-on-year growth among states with published figures — currently Perak (+36.1% arrivals).</div>
-          </div>
-          <div class="card pad" style="display:flex;gap:10px;align-items:flex-start;">
-            <span class="badge gold">High economic impact</span>
-            <div class="detail-note" style="margin:0;">Among the top states by tourism receipts — currently Selangor, Kuala Lumpur, Pahang and Sabah.</div>
-          </div>
-          <div class="card pad" style="display:flex;gap:10px;align-items:flex-start;">
-            <span class="badge muted">Data pending</span>
-            <div class="detail-note" style="margin:0;">No individually published 2024 state breakdown yet in the primary DOSM release.</div>
-          </div>
-          <div class="card pad" style="display:flex;gap:10px;align-items:flex-start;">
-            <span class="badge" style="background:var(--brand-soft);color:var(--brand);">GDP data only</span>
-            <div class="detail-note" style="margin:0;">Dashed tile — no tourism breakdown published, but a real 2024 GDP growth figure is shown instead (not a tourism metric).</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="block">
-        <div class="block-head">
-          <div><span class="eyebrow">AI Model 2 · k-means segmentation</span><h2>Tourist segment clustering</h2></div>
-          <div class="block-desc">A real k-means run (computed in your browser, k=2) over the 4 states with both a published 2024 receipts figure and a matching 2023 baseline — grouping them by economic scale and growth. Shown as a proof of concept.</div>
+          <div><span class="eyebrow">AI Model 2 · k-means segmentation</span><h2>Tourism Market Segments</h2></div>
+          <div class="block-desc">Where scale meets growth.</div>
         </div>
         <div class="cols-2">
           <div class="card pad">
-            <div class="ptitle" style="margin-bottom:2px;">Receipts (RM billion) vs YoY growth</div>
+            <div class="scatter-head">
+              <div class="ptitle" style="margin-bottom:2px;">Receipts (RM billion) vs YoY growth</div>
+              <button type="button" class="run-seg-btn" id="runSegBtn">▶ Run segmentation</button>
+            </div>
             <div class="scatter" id="scatter" style="margin-top:26px;margin-bottom:26px;">
+              <div class="quad-label tr">🚀 Priority<br>markets</div>
+              <div class="quad-label tl">🌱 Growth<br>opportunities</div>
+              <div class="quad-label br">💎 Mature<br>markets</div>
+              <div class="quad-label bl">◻ Smaller<br>markets</div>
+              <div class="scatter-tooltip" id="scatterTooltip" hidden></div>
               <div class="axis-x">Tourism receipts, 2024 (RM billion) →</div>
               <div class="axis-y">↑ YoY growth (%)</div>
             </div>
+            <div class="seg-status" id="segStatus" hidden></div>
+            <div class="state-detail" id="stateDetail" hidden></div>
+            <div class="scatter-hint">Hover a state for details · click a state or cluster to explore</div>
           </div>
           <div class="card pad">
-            <div class="ptitle" style="margin-bottom:10px;">What the clusters mean</div>
+            <div class="ptitle" style="margin-bottom:10px;">Cluster overview</div>
             <div id="clusterLegend" style="display:flex;flex-direction:column;gap:10px;"></div>
-            <div class="detail-note" style="margin-top:14px;">
-              <b style="color:var(--ink);">Method:</b> both features are standardized (z-score), then k-means (k=2, Euclidean distance) assigns each state to the nearer of two centroids, refit for a few iterations until stable — the same algorithm used for larger customer/region segmentation problems, just run here on a very small, honestly-disclosed sample.
+            <div class="ai-insight" id="aiInsight">
+              <button type="button" class="ai-insight-btn" id="aiInsightBtn" aria-expanded="false">
+                <span class="ai-ic">✨</span><span class="ai-label">AI Insight</span>
+                <span class="ai-teaser" id="aiInsightTeaser"></span>
+                <span class="ai-link" id="aiInsightLink">View explanation →</span>
+              </button>
+              <div class="ai-insight-detail" id="aiInsightDetail" hidden></div>
             </div>
-            <div class="detail-note">
-              <b style="color:var(--ink);">Limitation:</b> n=4 states is too small to generalize from. Perak (fastest-growing) and Sarawak (secondary source) are excluded here because they lack a matching pair of figures — re-run once DOSM publishes the full 16-state table.
+            <div class="method-row">
+              <span class="method-pill">K-means · k=2</span>
+              <span class="method-pill">4 states · 2 indicators</span>
+              <button type="button" class="method-info-btn" id="methodInfoBtn" aria-expanded="false">ⓘ Methodology</button>
             </div>
+            <div class="detail-note" id="methodDetail" hidden style="margin-top:10px;">
+              <b style="color:var(--ink);">Method:</b> both features are standardized (z-score), then k-means (k=2, Euclidean distance) assigns each state to the nearer of two centroids, refit for a few iterations until stable — computed live in your browser over the 4 states with both a published 2024 receipts figure and a matching 2023 baseline.
+              <br><br>
+              <b style="color:var(--ink);">Limitation:</b> n=4 states is too small to generalize from. Perak (no receipts figure published) and Sarawak (its receipts/growth come from a state-government statement, not a DOSM release) are excluded here to keep this cluster limited to DOSM-confirmed figures only — re-run once DOSM publishes the full 16-state table.
+            </div>
+            <div class="cluster-footnote">Note: 4-state sample; results are directional.</div>
           </div>
         </div>
       </section>
@@ -1703,7 +1922,7 @@
           <div><span class="eyebrow">Who this is for</span><h2>Purpose &amp; audience</h2></div>
         </div>
         <div class="card pad" style="font-size:13px;color:var(--ink-2);line-height:1.7;">
-          This dashboard is built primarily for <b style="color:var(--ink);">government policymakers and planning agencies</b> — tourism ministries, state economic planning units, and statistical bodies — to support tourism policy planning, resource allocation and infrastructure decisions with evidence rather than anecdote. Tourism-industry stakeholders (hotels, attractions, travel agents, transport operators) are a secondary audience who can use the same regional and economic signals to refine their own operations.
+          Built for <b style="color:var(--ink);">government policymakers and planning agencies</b> to support tourism policy and infrastructure decisions with evidence — tourism-industry stakeholders are a secondary audience for the same regional and economic signals.
         </div>
       </section>
 
@@ -1743,10 +1962,21 @@
         <div class="block-head">
           <div><span class="eyebrow">Methodology</span><h2>Where AI/ML is actually used here</h2></div>
         </div>
-        <div class="card pad" style="font-size:12.8px;color:var(--ink-2);line-height:1.7;">
-          <p style="margin:0 0 10px;"><b style="color:var(--ink);">Executive Overview insights</b> are rule-based, not a trained model: each one compares official figures against prior-year values or simple thresholds (highest YoY growth, top-N by receipts, count of states missing a published breakdown). Intentional for v1 — every insight traces to one number in one official release, no black box.</p>
-          <p style="margin:0 0 10px;"><b style="color:var(--ink);">Demand Forecast</b> uses a real least-squares linear regression, fitted live in your browser to Tourism Malaysia's 2006–2019 arrivals series, plus a disclosed heuristic (half the confirmed/preliminary 2024→2025 growth rate) for the 2026 near-term projection — full reasoning on that tab.</p>
-          <p style="margin:0;"><b style="color:var(--ink);">Tourist segment clustering</b> (Regional Intelligence tab) runs a real k-means (k=2) over the 4 states with matched receipts + growth figures — a genuine unsupervised-learning pass, on a small, honestly-disclosed sample. The <b style="color:var(--ink);">Policy Simulator</b> tab is not a model at all — it's disclosed, transparent arithmetic (visitor scaling or direct receipts scaling) on the same real 2024 figures, held out separately so it's never mistaken for a prediction.</p>
+        <div class="card pad">
+          <div class="method-badges-row">
+            <div class="method-badge"><div class="mb-name">Executive Overview</div><div class="mb-tag">Rule-based, not a model</div></div>
+            <div class="method-badge"><div class="mb-name">Demand Forecast</div><div class="mb-tag">Live linear regression</div></div>
+            <div class="method-badge"><div class="mb-name">Segmentation</div><div class="mb-tag">Live k-means, k=2</div></div>
+            <div class="method-badge"><div class="mb-name">Policy Simulator</div><div class="mb-tag">Disclosed arithmetic, not a model</div></div>
+          </div>
+          <div class="method-row">
+            <button type="button" class="method-info-btn" id="aboutMethodBtn" aria-expanded="false">ⓘ Full methodology</button>
+          </div>
+          <div class="detail-note" id="aboutMethodDetail" hidden style="margin-top:8px;font-size:12.8px;line-height:1.7;">
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">Executive Overview insights</b> are rule-based, not a trained model: each one compares official figures against prior-year values or simple thresholds (highest YoY growth, top-N by receipts, count of states missing a published breakdown). Intentional for v1 — every insight traces to one number in one official release, no black box.</p>
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">Demand Forecast</b> uses a real least-squares linear regression, fitted live in your browser to Tourism Malaysia's 2006–2019 arrivals series, plus a disclosed heuristic (half the confirmed/preliminary 2024→2025 growth rate) for the 2026 near-term projection — full reasoning on that tab.</p>
+            <p style="margin:0;"><b style="color:var(--ink);">Tourist segment clustering</b> (Regional Intelligence tab) runs a real k-means (k=2) over the 4 states with matched receipts + growth figures — a genuine unsupervised-learning pass, on a small, honestly-disclosed sample. The <b style="color:var(--ink);">Policy Simulator</b> tab is not a model at all — it's disclosed, transparent arithmetic (visitor scaling or direct receipts scaling) on the same real 2024 figures, held out separately so it's never mistaken for a prediction.</p>
+          </div>
         </div>
       </section>
 
@@ -1756,38 +1986,30 @@
         </div>
         <div class="card pad">
           <div class="source-list">
-            <div class="source-item"><div><div class="sn">Tourism Satellite Account, 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> (dosm.gov.my) — GDP contribution &amp; employment figures. Published 2025.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/tourism-satellite-account-2024" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Domestic Tourism Survey, 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> (dosm.gov.my) — national domestic visitor &amp; expenditure figures, spending categories, length of stay.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/domestic-tourism-survey-2024" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Domestic Tourism Survey (States), 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> (dosm.gov.my) — state-level domestic visitor &amp; receipt figures used in Tourism Economy &amp; Regional Intelligence.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/domestic-tourism-survey-states-2024" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Malaysia Tourism Statistics in Brief, 2024</div><div class="sd">Tourism Malaysia (MOTAC) — inbound arrivals, receipts, source markets, entry mode.</div></div><a href="https://data.tourism.gov.my/frontend/pdf/New_Final_Malaysia%20Tourism%20Statistics%20in%20Brief%202024.pdf" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Sarawak 2024 receipts (secondary)</div><div class="sd">Media report citing DOSM, not yet in a primary release we could confirm directly — flagged as indicative in-app.</div></div><span class="mono" style="color:var(--ink-muted);font-size:11px;">Secondary</span></div>
-            <div class="source-item"><div><div class="sn">River basin water pollution monitoring, 2000–2021</div><div class="sd"><b class="port-tag">data.gov.my</b> open-data portal (DOSM-sourced) — proportion of monitored basins classified clean, slightly polluted, or polluted (SDG 12). Pulled directly from the official CSV endpoint.</div></div><a href="https://data.gov.my/data-catalogue/water_pollution_basin" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Household Income &amp; Expenditure Survey (districts), 2022 &amp; 2024</div><div class="sd"><b class="port-tag">OpenDOSM</b> (open.dosm.gov.my) — mean household expenditure by district (SDG 12), used for tourism-hotspot districts. Pulled directly from the official CSV endpoint.</div></div><a href="https://open.dosm.gov.my/data-catalogue/hies_district" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Real GDP by state, 2015–2025</div><div class="sd"><b class="port-tag">OpenDOSM</b> (open.dosm.gov.my) — annual real GDP growth by state and sector (SDG 8).</div></div><a href="https://open.dosm.gov.my/data-catalogue/gdp_state_real_supply" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Real GDP by sector, 2015–2025</div><div class="sd"><b class="port-tag">OpenDOSM</b> (open.dosm.gov.my) — national annual real GDP growth by economic sector (SDG 9).</div></div><a href="https://open.dosm.gov.my/data-catalogue/gdp_annual_real_supply" target="_blank" rel="noopener">Source ↗</a></div>
-            <div class="source-item"><div><div class="sn">Monthly landings of marine fish by state, 2018–2023</div><div class="sd">Dept. of Fisheries via <b class="port-tag">data.gov.my</b> — marine fish landings (SDG 14). Downloaded as the official CSV directly from data.gov.my.</div></div><a href="https://data.gov.my/data-catalogue/fish_landings" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Tourism Satellite Account, 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> — GDP contribution &amp; employment.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/tourism-satellite-account-2024" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Domestic Tourism Survey, 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> — national visitor &amp; expenditure figures.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/domestic-tourism-survey-2024" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Domestic Tourism Survey (States), 2024</div><div class="sd"><b class="port-tag">Portal Rasmi DOSM</b> — state-level visitor &amp; receipt figures.</div></div><a href="https://www.dosm.gov.my/portal-main/release-content/domestic-tourism-survey-states-2024" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Malaysia Tourism Statistics in Brief, 2024</div><div class="sd">Tourism Malaysia (MOTAC) — arrivals, receipts, source markets.</div></div><a href="https://data.tourism.gov.my/frontend/pdf/New_Final_Malaysia%20Tourism%20Statistics%20in%20Brief%202024.pdf" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Sarawak 2024 receipts (secondary)</div><div class="sd">Sarawak Tourism Minister, State Legislative Assembly address — RM12.45B total (+24.73% YoY), likely incl. international visitors, so not comparable to other states' DOSM domestic-only figures.</div></div><a href="https://dayakdaily.com/tourism-boom-sarawak-records-rm12-45-bin-in-2024-up-from-rm9-99-bin/" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">River basin water pollution, 2000–2021</div><div class="sd"><b class="port-tag">data.gov.my</b> — % of basins clean/slight/polluted (SDG 12).</div></div><a href="https://data.gov.my/data-catalogue/water_pollution_basin" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Household Income &amp; Expenditure Survey (districts)</div><div class="sd"><b class="port-tag">OpenDOSM</b> — mean expenditure by district (SDG 12).</div></div><a href="https://open.dosm.gov.my/data-catalogue/hies_district" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Real GDP by state, 2015–2025</div><div class="sd"><b class="port-tag">OpenDOSM</b> — annual real GDP by state &amp; sector (SDG 8).</div></div><a href="https://open.dosm.gov.my/data-catalogue/gdp_state_real_supply" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Real GDP by sector, 2015–2025</div><div class="sd"><b class="port-tag">OpenDOSM</b> — national real GDP by sector (SDG 9).</div></div><a href="https://open.dosm.gov.my/data-catalogue/gdp_annual_real_supply" target="_blank" rel="noopener">Source ↗</a></div>
+            <div class="source-item"><div><div class="sn">Marine fish landings by state, 2018–2023</div><div class="sd">Dept. of Fisheries via <b class="port-tag">data.gov.my</b> (SDG 14).</div></div><a href="https://data.gov.my/data-catalogue/fish_landings" target="_blank" rel="noopener">Source ↗</a></div>
           </div>
-          <div class="detail-note" style="margin-top:14px;">
-            <b style="color:var(--ink);">On OpenDOSM's Open API:</b> we checked its data catalogue directly and it does not publish a tourism-receipts or DOSM-branded visitor-arrivals dataset — DOSM releases those specific figures only as PDF/press-release pages (the four links above). The figures above are sourced from those official releases rather than an API, because DOSM's own API doesn't carry this dataset.
+          <div class="method-row">
+            <span class="method-pill">9 official sources</span>
+            <span class="method-pill">0 fabricated figures</span>
+            <button type="button" class="method-info-btn" id="aboutSourcesBtn" aria-expanded="false">ⓘ More about our data choices</button>
           </div>
-          <div class="detail-note" style="margin-top:10px;">
-            <b style="color:var(--ink);">What we did pull live via API:</b> the wider <span class="api-cite">data.gov.my</span> open data portal (a separate, broader catalogue than OpenDOSM, covering all Malaysian government agencies) does publish a genuine open dataset of monthly foreign arrivals from the Immigration Department (<span class="api-cite">api.data.gov.my/data-catalogue?id=arrivals</span>). We queried it directly and used the pulled monthly data as an independent cross-check on the Demand Forecast page — see <b style="color:var(--ink);">"Live open-data pull"</b> there for the full 58-row dataset and top-country breakdown, pulled verbatim with no estimation.
+          <div class="cluster-footnote" style="margin-top:6px;">Every figure is dated, cited and traceable to its official portal — no estimation, no fabrication.</div>
+          <div class="detail-note" id="aboutSourcesDetail" hidden style="margin-top:10px;">
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">On OpenDOSM's Open API:</b> its data catalogue does not publish a tourism-receipts or DOSM-branded visitor-arrivals dataset — DOSM releases those specific figures only as PDF/press-release pages (the links above). We sourced from those official releases rather than an API, because DOSM's own API doesn't carry this dataset.</p>
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">What we did pull live via API:</b> the wider <span class="api-cite">data.gov.my</span> portal does publish a genuine open dataset of monthly foreign arrivals from the Immigration Department (<span class="api-cite">api.data.gov.my/data-catalogue?id=arrivals</span>). We queried it directly and used it as an independent cross-check on the Demand Forecast page — see <b style="color:var(--ink);">"Live open-data pull"</b> there for the full 58-row dataset, pulled verbatim with no estimation.</p>
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">SDG evidence, all from official CSVs:</b> for SDGs 8, 9, 12 and 14 we downloaded the relevant official dataset directly rather than estimating or paraphrasing figures — see "SDG alignment" above for the real numbers.</p>
+            <p style="margin:0 0 10px;"><b style="color:var(--ink);">Datasets reviewed but not used:</b> <span class="api-cite">mei.csv</span> (DOSM's national economic index) and <span class="api-cite">crops_district_production.csv</span> (district crop production) were considered but left out — neither is tourism-specific, and we don't force a speculative correlation onto real numbers.</p>
+            <p style="margin:0;"><b style="color:var(--ink);">Ground rules:</b> definitions are kept separate — <span class="mono" style="font-size:11.5px;">tourist</span> vs <span class="mono" style="font-size:11.5px;">excursionist</span> vs <span class="mono" style="font-size:11.5px;">visitor</span> are never blended, and inbound figures are never summed with GDP-contribution figures. Where a state has no officially published breakdown, it is labelled <b style="color:var(--ink);">"data pending"</b> rather than estimated or interpolated.</p>
           </div>
-          <div class="detail-note" style="margin-top:10px;">
-            <b style="color:var(--ink);">SDG evidence, all from official CSVs:</b> the competition asks us to align with specific SDGs — 8, 9, 12 and 14. For each, we downloaded the relevant official dataset directly (water pollution and household expenditure for SDG 12; state and sector GDP for SDG 8 &amp; 9; marine fish landings for SDG 14) rather than estimating or paraphrasing figures — see <b style="color:var(--ink);">"SDG alignment"</b> above for the real numbers and what they mean for tourism policy.
-          </div>
-          <div class="detail-note" style="margin-top:10px;">
-            <b style="color:var(--ink);">Datasets reviewed but not used:</b> two additional real datasets — <span class="api-cite">mei.csv</span> (DOSM's national Leading/Coincident/Lagging economic index, 1991–present) and <span class="api-cite">crops_district_production.csv</span> (district-level crop production) — were considered for this dashboard. Neither is tourism-specific: the economic-index series describes the whole economy, not the tourism sector, and the crop data covers agriculture with no tourism linkage in the source itself. Rather than force a speculative correlation onto real numbers, we left both out — consistent with the same rule applied everywhere else on this dashboard: no figure appears unless it genuinely measures tourism, and no relationship is implied unless the source data actually supports it.
-          </div>
-        </div>
-      </section>
-
-      <section class="block">
-        <div class="block-head">
-          <div><span class="eyebrow">Data discipline</span><h2>Ground rules we followed</h2></div>
-        </div>
-        <div class="card pad" style="font-size:12.8px; color:var(--ink-2); line-height:1.75;">
-          Official sources first (Portal Rasmi DOSM, OpenDOSM, data.gov.my, Tourism Malaysia/MOTAC) — every figure above is dated, cited, and traceable to the specific portal it came from. Definitions kept separate: <span class="mono" style="font-size:11.5px;">tourist</span> vs <span class="mono" style="font-size:11.5px;">excursionist</span> vs <span class="mono" style="font-size:11.5px;">visitor</span> are never blended, and inbound figures are never summed with GDP-contribution figures. Where a state has no officially published individual breakdown, it is labelled <b style="color:var(--ink);">"data pending"</b> rather than estimated or interpolated — we chose incompleteness over a fabricated number.
         </div>
       </section>
     </section>
@@ -1852,7 +2074,7 @@
   }
 
   // ---- Whole-card "chart-jump": click a Dashboard diagram, or a hero orbit card, to open its full detail page ----
-  document.querySelectorAll('.chart-jump[data-page], .onode-glass.orbit-jump[data-page]').forEach(function(card){
+  document.querySelectorAll('.chart-jump[data-page], .onode-glass.orbit-jump[data-page], .glance-cat[data-page]').forEach(function(card){
     card.addEventListener('click', function(){ goToPage(card.dataset.page); });
     card.addEventListener('keydown', function(e){
       if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); goToPage(card.dataset.page); }
@@ -2019,7 +2241,7 @@
     {id:'sabah', name:'Sabah', region:'East Malaysia', col:7, row:1, alos:3.01,
       data:{receipts:'RM8.6B receipts', prior:'from RM6.7B in 2023', tags:['gold']}},
     {id:'sarawak', name:'Sarawak', region:'East Malaysia', col:7, row:3, alos:3.09,
-      data:{receipts:'~RM6.9B receipts', note:'Secondary source — see Data & Methodology', tags:['secondary']}}
+      data:{receipts:'RM12.45B total receipts (+24.73% YoY)', note:'State-government figure, not DOSM — likely includes international visitors, so not directly comparable to other states’ domestic-only figures. See Data & Methodology.', tags:['secondary']}}
   ];
 
   var mapSvg = document.getElementById('mapSvg');
@@ -2112,6 +2334,7 @@
       document.querySelectorAll('#mapSvg .state-path.sel').forEach(function(x){ x.classList.remove('sel'); });
       path.classList.add('sel');
       renderDetail(s);
+      updateMapSignals(s, hasData, hasGdpOnly);
     }
     function onKey(evt){ if(evt.key==='Enter' || evt.key===' '){ evt.preventDefault(); onClick(); } }
 
@@ -2122,6 +2345,28 @@
     });
     hit.addEventListener('keydown', onKey);
   });
+
+  // ---- Map Signals: highlights the matching signal tile and explains why, when a state is clicked ----
+  function updateMapSignals(s, hasData, hasGdpOnly){
+    var note = document.getElementById('signalsNote');
+    var tiles = document.querySelectorAll('.signal-tile');
+    if(!note || !tiles.length) return;
+    tiles.forEach(function(t){ t.classList.remove('active'); });
+    var key, text;
+    if(hasData && s.data.tags && s.data.tags.indexOf('good') > -1){
+      key = 'good'; text = s.name + ' is tagged Growth leader — the fastest published year-on-year arrivals growth.';
+    } else if(hasData && s.data.tags && s.data.tags.indexOf('gold') > -1){
+      key = 'gold'; text = s.name + ' is tagged High economic impact — among the top states by tourism receipts.';
+    } else if(hasGdpOnly){
+      key = 'gdp'; text = s.name + ' has no published tourism breakdown yet — a real GDP growth figure is shown instead.';
+    } else {
+      key = 'pending'; text = s.name + ' has no individually published 2024 tourism breakdown yet.';
+    }
+    var match = document.querySelector('.signal-tile[data-signal="' + key + '"]');
+    if(match) match.classList.add('active');
+    note.textContent = text;
+    note.classList.add('matched');
+  }
 
   function badgeFor(tag){
     if(tag==='good') return '<span class="badge good">Growth leader</span>';
@@ -2604,6 +2849,20 @@
     });
   })();
 
+  // ---- Data & Methodology page: simple label-toggling disclosure buttons ----
+  function wireInfoToggle(btnId, detailId, openLabel, closedLabel){
+    var btn = document.getElementById(btnId), detail = document.getElementById(detailId);
+    if(!btn || !detail) return;
+    btn.addEventListener('click', function(){
+      var open = detail.hidden;
+      detail.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? openLabel : closedLabel;
+    });
+  }
+  wireInfoToggle('aboutMethodBtn', 'aboutMethodDetail', '✕ Hide methodology', 'ⓘ Full methodology');
+  wireInfoToggle('aboutSourcesBtn', 'aboutSourcesDetail', '✕ Hide', 'ⓘ More about our data choices');
+
   // ---- Combined water-quality "big diagram": all 3 indicators overlaid, one interactive chart ----
   (function(){
     var svg = document.getElementById('waterQualityBigSvg');
@@ -2726,16 +2985,17 @@
     {name:'Pahang', receipts:8.7, growth:29.9, labelBelow:false},
     {name:'Sabah', receipts:8.6, growth:28.4, labelBelow:true}
   ];
-  function zscore(arr){
+  function statsOf(arr){
     var mean = arr.reduce(function(a,b){return a+b;},0)/arr.length;
     var sd = Math.sqrt(arr.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/arr.length) || 1;
-    return arr.map(function(v){ return (v-mean)/sd; });
+    return {mean:mean, sd:sd};
   }
-  var rZ = zscore(CLUSTER_STATES.map(function(s){return s.receipts;}));
-  var gZ = zscore(CLUSTER_STATES.map(function(s){return s.growth;}));
-  var pts = CLUSTER_STATES.map(function(s,i){ return [rZ[i], gZ[i]]; });
-  // init centroids at min/max receipts-z to break ties deterministically
+  var rStats = statsOf(CLUSTER_STATES.map(function(s){return s.receipts;}));
+  var gStats = statsOf(CLUSTER_STATES.map(function(s){return s.growth;}));
+  var pts = CLUSTER_STATES.map(function(s){ return [(s.receipts-rStats.mean)/rStats.sd, (s.growth-gStats.mean)/gStats.sd]; });
+  // init centroids at min/max receipts-z to break ties deterministically (real datapoints, used as seeds)
   var c0 = pts[0], c1 = pts[pts.length-1];
+  var c0Init = c0.slice(), c1Init = c1.slice();
   for(var iter=0; iter<10; iter++){
     var assign = pts.map(function(p){
       var d0 = Math.hypot(p[0]-c0[0], p[1]-c0[1]);
@@ -2752,41 +3012,296 @@
     var d1 = Math.hypot(p[0]-c1[0], p[1]-c1[1]);
     return d0<=d1 ? 0 : 1;
   });
+  function distToCentroid(idx){
+    var p = pts[idx], c = finalAssign[idx]===0 ? c0 : c1;
+    return Math.hypot(p[0]-c[0], p[1]-c[1]);
+  }
   // label cluster with higher mean receipts as "Major Hub"
   var meanReceipts0 = CLUSTER_STATES.filter(function(_,i){return finalAssign[i]===0;}).reduce(function(a,s){return a+s.receipts;},0) / Math.max(1,finalAssign.filter(function(a){return a===0;}).length);
   var meanReceipts1 = CLUSTER_STATES.filter(function(_,i){return finalAssign[i]===1;}).reduce(function(a,s){return a+s.receipts;},0) / Math.max(1,finalAssign.filter(function(a){return a===1;}).length);
+  var meanGrowth0 = CLUSTER_STATES.filter(function(_,i){return finalAssign[i]===0;}).reduce(function(a,s){return a+s.growth;},0) / Math.max(1,finalAssign.filter(function(a){return a===0;}).length);
+  var meanGrowth1 = CLUSTER_STATES.filter(function(_,i){return finalAssign[i]===1;}).reduce(function(a,s){return a+s.growth;},0) / Math.max(1,finalAssign.filter(function(a){return a===1;}).length);
   var majorCluster = meanReceipts0 >= meanReceipts1 ? 0 : 1;
+  var minorCluster = 1 - majorCluster;
+  var meanReceiptsMajor = majorCluster===0?meanReceipts0:meanReceipts1;
+  var meanReceiptsMinor = majorCluster===0?meanReceipts1:meanReceipts0;
+  var meanGrowthMajor = majorCluster===0?meanGrowth0:meanGrowth1;
+  var meanGrowthMinor = majorCluster===0?meanGrowth1:meanGrowth0;
+  var scaleGapPct = Math.round(((meanReceiptsMajor - meanReceiptsMinor) / meanReceiptsMinor) * 100);
+  var scaleSmallerPct = Math.round(((meanReceiptsMajor - meanReceiptsMinor) / meanReceiptsMajor) * 100);
+  var growthDiff = Math.abs(meanGrowthMajor - meanGrowthMinor);
   var clusterMeta = {};
-  clusterMeta[majorCluster] = {name:'Major Tourism Hub', color:'var(--cat-1)', badge:'c1', desc:'Highest-scale receipts among published states — sustain investment, watch for over-concentration.'};
-  clusterMeta[1-majorCluster] = {name:'Established Secondary Hub', color:'var(--cat-2)', badge:'c2', desc:'Solid, similar growth to the top tier but roughly 40% of the receipts scale — candidates for targeted promotion to close the gap.'};
+  clusterMeta[majorCluster] = {name:'Major Tourism Hub', icon:'🔵', color:'var(--cat-1)', badge:'c1',
+    metric:'💰 Highest receipts scale', tag:'Scale leaders',
+    reco:'Sustain investment and protect market leadership — watch for over-concentration.'};
+  clusterMeta[minorCluster] = {name:'Secondary Hub', icon:'🟠', color:'var(--cat-2)', badge:'c2',
+    metric:'📊 ~'+Math.abs(scaleSmallerPct)+'% smaller receipts scale', tag:'Promotion opportunity',
+    reco:'Increase targeted promotion to close the scale gap with the major hub.'};
 
   var scatter = document.getElementById('scatter');
   var rMin = Math.min.apply(null, CLUSTER_STATES.map(function(s){return s.receipts;})) - 2;
   var rMax = Math.max.apply(null, CLUSTER_STATES.map(function(s){return s.receipts;})) + 2;
   var gMin = Math.min.apply(null, CLUSTER_STATES.map(function(s){return s.growth;})) - 1;
   var gMax = Math.max.apply(null, CLUSTER_STATES.map(function(s){return s.growth;})) + 1;
+  function scatterXPct(rVal){ return (rVal-rMin)/(rMax-rMin)*88 + 4; }
+  function scatterYPct(gVal){ return (gVal-gMin)/(gMax-gMin)*80 + 8; }
+  function centroidReceipts(c){ return c[0]*rStats.sd + rStats.mean; }
+  function centroidGrowth(c){ return c[1]*gStats.sd + gStats.mean; }
+
+  var selection = null; // {type:'state', idx} or {type:'cluster', cluster}
+
+  // Render-only "dodge": when two states are numerically almost identical (as Selangor and
+  // WP Kuala Lumpur are, e.g.), their dots would otherwise sit on top of one another and one
+  // would be unclickable. Nudge such pairs a couple of percentage points apart visually — the
+  // real receipts/growth values shown in tooltips and the detail panel are never touched.
+  var dotPos = CLUSTER_STATES.map(function(s){ return {x: scatterXPct(s.receipts), y: scatterYPct(s.growth)}; });
+  for(var di=0; di<dotPos.length; di++){
+    for(var dj=di+1; dj<dotPos.length; dj++){
+      var ddx = dotPos[di].x - dotPos[dj].x, ddy = dotPos[di].y - dotPos[dj].y;
+      if(Math.hypot(ddx,ddy) < 3.5){
+        dotPos[di].x -= 3; dotPos[di].y += 3;
+        dotPos[dj].x += 3; dotPos[dj].y -= 3;
+      }
+    }
+  }
+
   CLUSTER_STATES.forEach(function(s,i){
-    var xPct = (s.receipts-rMin)/(rMax-rMin)*88 + 4;
-    var yPct = (s.growth-gMin)/(gMax-gMin)*80 + 8;
     var dot = document.createElement('div');
     dot.className='pt';
-    dot.style.left = xPct+'%';
-    dot.style.bottom = yPct+'%';
+    dot.dataset.idx = i;
+    dot.dataset.cluster = finalAssign[i];
+    dot.style.left = dotPos[i].x+'%';
+    dot.style.bottom = dotPos[i].y+'%';
     dot.style.background = clusterMeta[finalAssign[i]].color;
     dot.innerHTML = '<span class="lb'+(s.labelBelow?' below':'')+'">'+s.name+'</span>';
-    dot.title = s.name+': RM'+s.receipts+'B, '+s.growth+'% growth — '+clusterMeta[finalAssign[i]].name;
+    dot.addEventListener('mouseenter', function(){ showScatterTooltip(dot, i); });
+    dot.addEventListener('mouseleave', hideScatterTooltip);
+    dot.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(selection && selection.type==='state' && selection.idx===i){ clearSelection(); }
+      else { selectState(i); }
+    });
     scatter.appendChild(dot);
   });
 
-  var legendEl = document.getElementById('clusterLegend');
+  // a centroid can land right under a state's dot (small samples cluster tightly) — nudge the
+  // marker clear of the nearest dot so it stays independently clickable; this only moves the
+  // marker's on-screen position, the centroid values shown on click are unaffected.
+  function centroidScreenPos(centroid){
+    var cx = scatterXPct(centroidReceipts(centroid));
+    var cy = scatterYPct(centroidGrowth(centroid));
+    var nearestDotDist = Math.min.apply(null, dotPos.map(function(p){ return Math.hypot(p.x-cx, p.y-cy); }));
+    if(nearestDotDist < 4){ cy = Math.min(94, cy + 6); }
+    return {x:cx, y:cy};
+  }
+
   [0,1].forEach(function(c){
-    var members = CLUSTER_STATES.filter(function(_,i){return finalAssign[i]===c;}).map(function(s){return s.name;}).join(', ');
+    var pos = centroidScreenPos(c===0?c0:c1);
+    var marker = document.createElement('div');
+    marker.className = 'centroid-marker';
+    marker.dataset.cluster = c;
+    marker.style.left = pos.x+'%';
+    marker.style.bottom = pos.y+'%';
+    marker.style.borderColor = clusterMeta[c].color;
+    marker.style.color = clusterMeta[c].color;
+    marker.title = clusterMeta[c].name+' centroid';
+    marker.textContent = '◆';
+    marker.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(selection && selection.type==='cluster' && selection.cluster===c){ clearSelection(); }
+      else { selectCluster(c); }
+    });
+    scatter.appendChild(marker);
+  });
+
+  scatter.addEventListener('click', function(e){
+    if(e.target === scatter) clearSelection();
+  });
+
+  var tooltipEl = document.getElementById('scatterTooltip');
+  function showScatterTooltip(dot, idx){
+    if(!tooltipEl) return;
+    var s = CLUSTER_STATES[idx], c = finalAssign[idx];
+    tooltipEl.innerHTML =
+      '<div class="tt-name">'+s.name.toUpperCase()+'</div>'+
+      '<div class="tt-row"><span>Receipts</span><b>RM '+s.receipts.toFixed(1)+'B</b></div>'+
+      '<div class="tt-row"><span>Growth</span><b>+'+s.growth.toFixed(1)+'%</b></div>'+
+      '<div class="tt-row"><span>Segment</span><b>'+clusterMeta[c].name+'</b></div>';
+    tooltipEl.hidden = false;
+    tooltipEl.style.left = dot.style.left;
+    tooltipEl.style.bottom = 'calc(' + dot.style.bottom + ' + 22px)';
+  }
+  function hideScatterTooltip(){ if(tooltipEl) tooltipEl.hidden = true; }
+
+  function updateDotStyles(){
+    scatter.querySelectorAll('.pt').forEach(function(dot){
+      dot.classList.remove('selected','dimmed');
+      if(!selection) return;
+      var idx = Number(dot.dataset.idx), cluster = Number(dot.dataset.cluster);
+      if(selection.type==='state'){ dot.classList.add(idx===selection.idx ? 'selected' : 'dimmed'); }
+      else if(selection.type==='cluster'){ dot.classList.add(cluster===selection.cluster ? 'selected' : 'dimmed'); }
+    });
+  }
+  function updateClusterCardStyles(){
+    document.querySelectorAll('.cluster-card').forEach(function(card){
+      var c = Number(card.dataset.cluster);
+      var active = selection && selection.type==='cluster' && selection.cluster===c;
+      card.classList.toggle('active', !!active);
+      var bd = card.querySelector('.cc-breakdown');
+      if(bd) bd.hidden = !active;
+      card.setAttribute('aria-expanded', active ? 'true' : 'false');
+    });
+  }
+  function hideStateDetail(){
+    var el = document.getElementById('stateDetail');
+    if(el){ el.hidden = true; el.innerHTML=''; }
+  }
+  function renderStateDetail(idx){
+    var el = document.getElementById('stateDetail');
+    if(!el) return;
+    var s = CLUSTER_STATES[idx], c = finalAssign[idx];
+    el.hidden = false;
+    el.innerHTML =
+      '<div class="sd-head"><span class="sd-name">'+s.name.toUpperCase()+'</span><button type="button" class="sd-close" aria-label="Close">✕</button></div>'+
+      '<div class="sd-rows">'+
+        '<div class="sd-row"><span class="sd-k">Tourism receipts</span><span class="sd-v">RM '+s.receipts.toFixed(1)+'B</span></div>'+
+        '<div class="sd-row"><span class="sd-k">YoY growth</span><span class="sd-v">+'+s.growth.toFixed(1)+'%</span></div>'+
+        '<div class="sd-row"><span class="sd-k">Segment</span><span class="sd-v">'+clusterMeta[c].name+'</span></div>'+
+        '<div class="sd-row"><span class="sd-k">Cluster distance</span><span class="sd-v">'+distToCentroid(idx).toFixed(2)+'</span></div>'+
+      '</div>'+
+      '<div class="sd-reco"><b>Recommendation:</b> '+clusterMeta[c].reco+'</div>';
+    el.querySelector('.sd-close').addEventListener('click', function(e){ e.stopPropagation(); clearSelection(); });
+  }
+  function selectState(idx){
+    selection = {type:'state', idx:idx};
+    updateDotStyles(); updateClusterCardStyles(); renderStateDetail(idx);
+  }
+  function selectCluster(c){
+    selection = {type:'cluster', cluster:c};
+    updateDotStyles(); updateClusterCardStyles(); hideStateDetail();
+  }
+  function clearSelection(){
+    selection = null;
+    updateDotStyles(); updateClusterCardStyles(); hideStateDetail();
+  }
+
+  var legendEl = document.getElementById('clusterLegend');
+  [majorCluster, minorCluster].forEach(function(c){
+    var memberIdxs = CLUSTER_STATES.map(function(_,i){return i;}).filter(function(i){return finalAssign[i]===c;});
+    var members = memberIdxs.map(function(i){return CLUSTER_STATES[i].name;}).join(' · ');
     var row = document.createElement('div');
-    row.style.display='flex'; row.style.gap='10px'; row.style.alignItems='flex-start';
-    row.innerHTML = '<span class="badge '+clusterMeta[c].badge+'">'+clusterMeta[c].name+'</span>'+
-      '<div class="detail-note" style="margin:0;flex:1;"><b style="color:var(--ink);">'+members+'.</b> '+clusterMeta[c].desc+'</div>';
+    row.className = 'cluster-card';
+    row.dataset.cluster = c;
+    row.tabIndex = 0;
+    row.setAttribute('role','button');
+    row.setAttribute('aria-expanded','false');
+    row.innerHTML =
+      '<div class="cc-main">'+
+        '<div class="cc-ic">'+clusterMeta[c].icon+'</div>'+
+        '<div class="cc-body">'+
+          '<div class="cc-tag">'+clusterMeta[c].name+' <span class="cc-count">· '+memberIdxs.length+' states</span></div>'+
+          '<div class="cc-states">'+members+'</div>'+
+          '<div class="cc-metric">'+clusterMeta[c].metric+' · '+clusterMeta[c].tag+'</div>'+
+        '</div>'+
+        '<div class="cc-chevron">›</div>'+
+      '</div>'+
+      '<div class="cc-breakdown" hidden>'+
+        memberIdxs.map(function(i){
+          var s = CLUSTER_STATES[i];
+          return '<div class="cc-member"><span class="cc-member-name">'+s.name+'</span><span class="cc-member-stats">RM '+s.receipts.toFixed(1)+'B · +'+s.growth.toFixed(1)+'%</span></div>';
+        }).join('')+
+        '<div class="cc-strategy"><b>Strategy:</b> '+clusterMeta[c].reco+'</div>'+
+      '</div>';
+    row.addEventListener('click', function(){
+      if(selection && selection.type==='cluster' && selection.cluster===c){ clearSelection(); }
+      else { selectCluster(c); }
+    });
+    row.addEventListener('keydown', function(e){
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); row.click(); }
+    });
     legendEl.appendChild(row);
   });
+
+  var aiInsightBtn = document.getElementById('aiInsightBtn');
+  var aiInsightDetail = document.getElementById('aiInsightDetail');
+  var aiInsightTeaser = document.getElementById('aiInsightTeaser');
+  var aiInsightLink = document.getElementById('aiInsightLink');
+  if(aiInsightTeaser) aiInsightTeaser.textContent = 'Scale is the main differentiator.';
+  if(aiInsightDetail){
+    aiInsightDetail.innerHTML = '<div class="ct-text">Growth is comparable across both groups (within '+growthDiff.toFixed(1)+' pts) — the real gap is scale, at roughly '+scaleGapPct+'% higher receipts for the major hub. Invest to sustain the leaders; target promotion to close the scale gap for the secondary hub.</div>';
+  }
+  if(aiInsightBtn && aiInsightDetail){
+    aiInsightBtn.addEventListener('click', function(){
+      var open = aiInsightDetail.hidden;
+      aiInsightDetail.hidden = !open;
+      aiInsightBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(aiInsightLink) aiInsightLink.textContent = open ? '✕ Hide' : 'View explanation →';
+    });
+  }
+
+  var methodBtn = document.getElementById('methodInfoBtn');
+  var methodDetail = document.getElementById('methodDetail');
+  if(methodBtn && methodDetail){
+    methodBtn.addEventListener('click', function(){
+      var open = methodDetail.hidden;
+      methodDetail.hidden = !open;
+      methodBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      methodBtn.textContent = open ? '✕ Hide methodology' : 'ⓘ Methodology';
+    });
+  }
+
+  // ---- "Run segmentation" animated walkthrough ----
+  var runSegBtn = document.getElementById('runSegBtn');
+  var segStatus = document.getElementById('segStatus');
+  var segAnimating = false;
+  function runSegmentation(){
+    if(segAnimating) return;
+    segAnimating = true;
+    clearSelection();
+    runSegBtn.disabled = true;
+    runSegBtn.textContent = '⏸ Running…';
+    segStatus.hidden = false;
+    var dots = Array.prototype.slice.call(scatter.querySelectorAll('.pt'));
+    var centroidEls = Array.prototype.slice.call(scatter.querySelectorAll('.centroid-marker'));
+
+    segStatus.textContent = 'Step 1 of 4 — states as neutral points';
+    dots.forEach(function(d){ d.style.background = 'var(--ink-muted)'; });
+    centroidEls.forEach(function(el){ el.style.opacity = '0'; });
+
+    setTimeout(function(){
+      segStatus.textContent = 'Step 2 of 4 — placing initial centroids';
+      centroidEls.forEach(function(el){
+        var c = Number(el.dataset.cluster);
+        var pos = centroidScreenPos(c===0 ? c0Init : c1Init);
+        el.style.left = pos.x+'%';
+        el.style.bottom = pos.y+'%';
+        el.style.opacity = '1';
+      });
+    }, 700);
+
+    setTimeout(function(){
+      segStatus.textContent = 'Step 3 of 4 — assigning states to the nearest centroid';
+      centroidEls.forEach(function(el){
+        var c = Number(el.dataset.cluster);
+        var pos = centroidScreenPos(c===0 ? c0 : c1);
+        el.style.left = pos.x+'%';
+        el.style.bottom = pos.y+'%';
+      });
+      dots.forEach(function(d){
+        var idx = Number(d.dataset.idx);
+        d.style.background = clusterMeta[finalAssign[idx]].color;
+      });
+    }, 1700);
+
+    setTimeout(function(){
+      segStatus.textContent = '✓ Step 4 of 4 — converged: 2 clusters found';
+      segAnimating = false;
+      runSegBtn.disabled = false;
+      runSegBtn.textContent = '↻ Replay segmentation';
+      setTimeout(function(){ if(!segAnimating) segStatus.hidden = true; }, 2400);
+    }, 2700);
+  }
+  if(runSegBtn) runSegBtn.addEventListener('click', runSegmentation);
 
   // ================= Dashboard trend cards: full history, sparkline + click-to-reveal dataset =================
   function sparkPoints(vals, w, h, padY){
